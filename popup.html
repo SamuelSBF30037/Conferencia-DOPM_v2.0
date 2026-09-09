@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Conferência DOPM</title>
+  <style>
+    :root {
+      --bg:#0d1117; --surface:#161b22; --surface2:#21262d;
+      --border:rgba(255,255,255,0.07);
+      --accent:#388bfd; --accent-dim:rgba(56,139,253,0.12);
+      --success:#3fb950; --warning:#d29922; --danger:#f85149;
+      --text:#e6edf3; --muted:#8b949e; --hint:#3d444d;
+      --r:8px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);width:420px;}
+
+    .header{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;}
+    .logo{width:32px;height:32px;background:var(--accent-dim);border:1px solid rgba(56,139,253,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+    .header-text h1{font-size:13px;font-weight:600;}
+    .header-text p{font-size:11px;color:var(--muted);margin-top:1px;}
+    .ver{margin-left:auto;font-size:10px;color:var(--hint);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-family:monospace;}
+
+    .modules{padding:12px 18px;display:flex;flex-direction:column;gap:5px;}
+    .mod{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);}
+    .mod-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
+    .mod-label{font-size:12px;font-weight:500;}
+    .mod-desc{font-size:10px;color:var(--muted);}
+    .mod-state{margin-left:auto;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;flex-shrink:0;white-space:nowrap;background:var(--surface2);color:var(--hint);}
+    .mod-state.run{background:rgba(56,139,253,.15);color:var(--accent);}
+    .mod-state.ok{background:rgba(63,185,80,.12);color:var(--success);}
+    .mod-state.warn{background:rgba(210,153,34,.12);color:var(--warning);}
+    .mod-state.err{background:rgba(248,81,73,.12);color:var(--danger);}
+    .mod-state.skip{color:var(--hint);}
+
+    .prog-wrap{margin:0 18px;background:var(--surface2);border-radius:3px;height:3px;overflow:hidden;}
+    .prog-fill{height:100%;background:var(--accent);border-radius:3px;width:0%;transition:width .4s ease;}
+
+    #status{padding:7px 18px;font-size:11px;color:var(--muted);text-align:center;min-height:24px;}
+    #status.ok{color:var(--success);}
+    #status.err{color:var(--danger);}
+
+    .actions{padding:0 18px 16px;display:flex;gap:8px;}
+    #btnRun{flex:1;height:38px;background:var(--accent);border:none;border-radius:var(--r);color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;}
+    #btnRun:hover{opacity:.88;}
+    #btnRun:active{transform:scale(.98);}
+    #btnRun:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+    #btnDl{height:38px;padding:0 14px;background:transparent;border:1px solid var(--border);border-radius:var(--r);color:var(--muted);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:border-color .15s,color .15s;}
+    #btnDl:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+    #btnDl:disabled{opacity:.35;cursor:not-allowed;}
+
+    .warn-box{margin:10px 18px 0;padding:9px 12px;background:rgba(210,153,34,.08);border:1px solid rgba(210,153,34,.25);border-radius:var(--r);font-size:11px;color:#e3b341;display:none;}
+    .warn-box.show{display:block;}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">📋</div>
+  <div class="header-text">
+    <h1>Conferência DOPM</h1>
+    <p>Relatório unificado por tópicos</p>
+  </div>
+  <span class="ver">v2.0</span>
+</div>
+
+<div class="warn-box" id="warnBox">
+  ⚠️ Acesse um site compatível antes de executar:<br>
+  <strong>sei.go.gov.br</strong> · <strong>sisp.ssp.go.gov.br</strong>
+</div>
+
+<div class="modules">
+  <div class="mod">
+    <span class="mod-icon">📁</span>
+    <div><div class="mod-label">Afastamentos / Licenças</div><div class="mod-desc">Divergências entre partes duplicadas dos blocos</div></div>
+    <span class="mod-state" id="s1">Aguardando</span>
+  </div>
+  <div class="mod">
+    <span class="mod-icon">🔄</span>
+    <div><div class="mod-label">Transferência de Unidade</div><div class="mod-desc">Nome, origem e destino</div></div>
+    <span class="mod-state" id="s2">Aguardando</span>
+  </div>
+  <div class="mod">
+    <span class="mod-icon">📅</span>
+    <div><div class="mod-label">Período Aquisitivo</div><div class="mod-desc">Duplicatas, incoerências e alertas de prazo</div></div>
+    <span class="mod-state" id="s3">Aguardando</span>
+  </div>
+  <div class="mod">
+    <span class="mod-icon">🚫</span>
+    <div><div class="mod-label">Suspensões de Afastamento</div><div class="mod-desc">Datas, duração e coerência de motivos</div></div>
+    <span class="mod-state" id="s4">Aguardando</span>
+  </div>
+</div>
+
+<div class="prog-wrap"><div class="prog-fill" id="prog"></div></div>
+<div id="status">Pronto para executar</div>
+
+<div class="actions">
+  <button id="btnRun">▶ Executar Conferência Completa</button>
+  <button id="btnDl" disabled>⬇ Relatório</button>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
