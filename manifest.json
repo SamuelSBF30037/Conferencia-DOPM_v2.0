@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Conferência DOPM",
+  "version": "2.0",
+  "description": "Executa os 4 scripts de conferência do DOPM e gera um único relatório unificado por tópicos.",
+  "permissions": ["activeTab", "scripting", "tabs"],
+  "host_permissions": [
+    "https://sei.go.gov.br/*",
+    "https://sisp.ssp.go.gov.br/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16":  "images/icon.png",
+      "48":  "images/icon.png",
+      "128": "images/icon.png"
+    },
+    "default_title": "Conferência DOPM"
+  },
+  "icons": {
+    "16":  "images/icon.png",
+    "48":  "images/icon.png",
+    "128": "images/icon.png"
+  }
+}
